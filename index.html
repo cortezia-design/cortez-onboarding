@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cortez IA – Connexion sécurisée à votre boîte mail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #e5f0ff 0, #f8fafc 45%, #e2e8f0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1160px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow:
+        0 18px 60px rgba(15, 23, 42, 0.18),
+        0 0 0 1px rgba(148, 163, 184, 0.15);
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1.1fr 1.6fr; /* droite plus large */
+      gap: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 1fr;
+        padding: 24px 20px;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 20% 20%, #38bdf8, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .brand-name {
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      font-size: 15px;
+      color: #0f172a;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .left-column {
+      border-right: 1px solid rgba(226, 232, 240, 0.9);
+      padding-right: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .left-column {
+        border-right: none;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+        padding-right: 0;
+        padding-bottom: 20px;
+        margin-bottom: 12px;
+      }
+    }
+
+    .left-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.06);
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 550;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+
+    .left-title {
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 14px;
+    }
+
+    .left-subtitle {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #475569;
+      margin-bottom: 22px;
+    }
+
+    .left-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .left-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #1e293b;
+    }
+
+    .left-list-bullet {
+      margin-top: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.12);
+      flex-shrink: 0;
+    }
+
+    .left-footnote {
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .left-footnote strong {
+      color: #0f172a;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 22px; /* plus d’espace entre les blocs */
+    }
+
+    .title-block h1 {
+      font-size: 20px;
+      font-weight: 650;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .title-block p {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .providers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .provider-btn {
+      flex: 1 1 120px;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 500;
+      color: #0f172a;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .provider-btn img {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .provider-btn span {
+      flex: 1;
+    }
+
+    .provider-btn.selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+    }
+
+    .provider-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(148, 163, 184, 0.28);
+    }
+
+    form {
+      margin-top: 4px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 16px; /* plus d’espace entre les champs */
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .field label {
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    .field small {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .field input,
+    .field select {
+      padding: 8px 9px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-size: 13px;
+      outline: none;
+      background: #f8fafc;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
+      background: #ffffff;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .security-box {
+      margin-top: 6px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5f5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 11px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .security-dot {
+      margin-top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #22c55e 0, #16a34a 55%, #0f766e 100%);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.22);
+      flex-shrink: 0;
+    }
+
+    .actions {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: #f9fafb;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow:
+        0 14px 30px rgba(15, 23, 42, 0.4),
+        0 0 0 1px rgba(15, 23, 42, 0.2);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    }
+
+    .primary-btn span.arrow {
+      font-size: 15px;
+      transform: translateY(0.5px);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow:
+        0 18px 35px rgba(30, 64, 175, 0.55),
+        0 0 0 1px rgba(37, 99, 235, 0.4);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+      box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.4),
+        0 0 0 1px rgba(15, 23, 42, 0.3);
+    }
+
+    .reassurance {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
+    .reassurance strong {
+      color: #0f172a;
+    }
+
+    .success-message {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #16a34a;
+      display: none;
+    }
+
+    .error-message {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #b91c1c;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- COLONNE GAUCHE -->
+    <div class="left-column">
+      <div class="brand">
+        <div class="brand-logo">
+          <!-- Mets ton logo à la place de ce <img> -->
+          <!-- IMPORTANT : renomme ton fichier en "cortez-logo.png" et mets-le dans le *même dossier* que ce fichier .html -->
+          <img src="cortez-logo.png" alt="Logo Cortez IA" />
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">Cortez IA</div>
+          <div class="brand-sub">Assistant premium pour hypnothérapeutes</div>
+        </div>
+      </div>
+
+      <div class="left-badge">
+        SÉCURISÉ &amp; PROFESSIONNEL
+      </div>
+
+      <h2 class="left-title">Connectez votre boîte mail, on s’occupe du reste.</h2>
+      <p class="left-subtitle">
+        Cortez IA lit vos emails, propose des créneaux pour vos séances et envoie
+        des réponses professionnelles automatiquement, 7j/7.
+      </p>
+
+      <ul class="left-list">
+        <li>
+          <span class="left-list-bullet"></span>
+          <span>Plus besoin de répondre aux emails tard le soir ou entre deux séances.</span>
+        </li>
+        <li>
+          <span class="left-list-bullet"></span>
+          <span>Une communication claire, chaleureuse et 100&nbsp;% alignée à votre pratique.</span>
+        </li>
+        <li>
+          <span class="left-list-bullet"></span>
+          <span>Vos identifiants restent strictement confidentiels et chiffrés.</span>
+        </li>
+      </ul>
+
+      <p class="left-footnote">
+        <strong>Important :</strong> vos informations ne sont ni revendues, ni partagées.
+        Elles ne servent qu’au fonctionnement de votre assistant Cortez IA.
+      </p>
+    </div>
+
+    <!-- COLONNE DROITE -->
+    <div class="right-column">
+      <div class="title-block">
+        <h1>Connexion sécurisée à votre boîte mail</h1>
+        <p>
+          Choisissez le fournisseur de votre adresse principale, puis renseignez les informations
+          nécessaires pour nous permettre de paramétrer votre assistant Cortez IA.
+        </p>
+      </div>
+
+      <!-- Sélection du fournisseur -->
+      <div>
+        <p style="font-size:12px; color:#64748b; margin-bottom:8px;">
+          Sélectionnez votre service de messagerie :
+        </p>
+        <div class="providers">
+          <button type="button" class="provider-btn" data-provider="Gmail">
+            <!-- VRAI logo Gmail -->
+            <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail" />
+            <span>Gmail</span>
+          </button>
+          <button type="button" class="provider-btn" data-provider="Outlook">
+            <img src="https://logodownload.org/wp-content/uploads/2019/08/outlook-logo-1-1.png" alt="Outlook" />
+            <span>Outlook</span>
+          </button>
+          <button type="button" class="provider-btn" data-provider="Yahoo Mail">
+            <img src="https://s.yimg.com/rz/p/yahoo_mail_en-US_s_f_pw_351x40_mail.png" alt="Yahoo Mail" />
+            <span>Yahoo Mail</span>
+          </button>
+          <button type="button" class="provider-btn" data-provider="Autre">
+            <span>Autre fournisseur</span>
+          </button>
+        </div>
+        <input type="hidden" id="provider" name="provider" value="" />
+      </div>
+
+      <!-- FORMULAIRE -->
+      <form id="onboarding-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullName">Nom &amp; prénom</label>
+            <input id="fullName" type="text" name="fullName" placeholder="Ex : Marie Dupont" required />
+          </div>
+
+          <div class="field">
+            <label for="practiceName">Nom de votre cabinet</label>
+            <input id="practiceName" type="text" name="practiceName" placeholder="Ex : Cabinet Harmonie Hypnose" />
+          </div>
+
+          <div class="field field-full">
+            <label for="email">Adresse e-mail à connecter</label>
+            <input id="email" type="email" name="email" placeholder="Ex : contact@votre-cabinet.fr" required />
+            <small>C’est l’adresse que Cortez IA utilisera pour envoyer vos réponses.</small>
+          </div>
+
+          <div class="field">
+            <label for="city">Ville principale de vos consultations</label>
+            <input id="city" type="text" name="city" placeholder="Ex : Montpellier" />
+          </div>
+
+          <div class="field">
+            <label for="timezone">Votre fuseau horaire</label>
+            <select id="timezone" name="timezone">
+              <option value="Europe/Paris">France (heure de Paris)</option>
+              <option value="Europe/Brussels">Belgique</option>
+              <option value="Europe/Zurich">Suisse</option>
+              <option value="Europe/London">Autre (heure UK)</option>
+            </select>
+          </div>
+
+          <div class="field field-full">
+            <label for="password">Mot de passe (temporaire ou spécifique)</label>
+            <input id="password" type="password" name="password" placeholder="Mot de passe de la boîte mail" required />
+            <small>
+              Idéalement, créez un <strong>mot de passe spécifique</strong> pour Cortez IA (ou mot de passe
+              “application” si votre fournisseur le permet).
+            </small>
+          </div>
+
+          <div class="field field-full">
+            <label for="notes">Instructions particulières</label>
+            <input id="notes" type="text" name="notes" placeholder="Ex : ne jamais proposer de séance le lundi, ton très chaleureux, vouvoiement…" />
+          </div>
+        </div>
+
+        <div class="security-box">
+          <div class="security-dot"></div>
+          <div>
+            Vos identifiants sont chiffrés et uniquement utilisés pour envoyer / recevoir des emails en votre nom.
+            Vous pourrez <strong>modifier ou révoquer l’accès</strong> à tout moment sur simple demande.
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary-btn">
+            <span>Valider et envoyer mes informations</span>
+            <span class="arrow">➜</span>
+          </button>
+          <div class="reassurance">
+            Une fois validé, notre équipe paramètre votre assistant Cortez IA et vous confirme
+            l’activation par e-mail sous 24&nbsp;à&nbsp;48h.
+          </div>
+        </div>
+
+        <div id="success-message" class="success-message">
+          ✅ Merci ! Vos informations ont été enregistrées. Vous recevrez un e-mail de confirmation très prochainement.
+        </div>
+        <div id="error-message" class="error-message">
+          Merci de sélectionner un fournisseur de messagerie et de remplir les champs obligatoires.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Sélection du fournisseur (Gmail, Outlook, etc.)
+    const providerButtons = document.querySelectorAll(".provider-btn");
+    const providerInput = document.getElementById("provider");
+
+    providerButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        providerButtons.forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        providerInput.value = btn.dataset.provider || "";
+      });
+    });
+
+    // Gestion de l'envoi du formulaire (front 100% fonctionnel)
+    const form = document.getElementById("onboarding-form");
+    const successMessage = document.getElementById("success-message");
+    const errorMessage = document.getElementById("error-message");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      errorMessage.style.display = "none";
+      successMessage.style.display = "none";
+
+      const provider = providerInput.value.trim();
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!provider || !fullName || !email || !password) {
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      // ICI tu pourras plus tard envoyer les données à ton backend avec fetch()
+      // Pour l'instant, on affiche juste un message de confirmation.
+      successMessage.style.display = "block";
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  </script>
+</body>
+</html>
